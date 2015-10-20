@@ -1,0 +1,85 @@
+﻿<UserControl
+    x:Class="AdaptiveUIPivot.Reposition"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AdaptiveUIPivot"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <ScrollViewer>
+            <RelativePanel HorizontalAlignment="Center" x:Name="content">
+                <!--mainImage panel-->
+                <RelativePanel x:Name="mainPanel" MaxWidth="610" Padding="10" RelativePanel.AlignLeftWithPanel="True" >
+                    <Image Source="/Images/halloween.jpg" x:Name="mainImage" Stretch="Uniform" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" />
+                    <TextBlock x:Name="mainTitle" FontSize="18" FontFamily="Segoe UI Light" RelativePanel.Below="mainImage">What is the Reposition pattern?</TextBlock>
+                    <TextBlock RelativePanel.Below="mainTitle" FontSize="14" FontFamily="Segoe UI" TextWrapping="WrapWholeWords" >This pattern is pretty straightforward. It’s all about moving elements of the page around to better align to window size and format. RelativePanel allows the positioning of items in relationship with each other and the panel itself. This allows for greater flexibility in layouts and enables a few key scenarios in content adaptability such as the reposition pattern.</TextBlock>
+                </RelativePanel>
+                <!-- gridview videoList panel-->
+                <RelativePanel RelativePanel.AlignRightWithPanel="True" Padding="10" x:Name="videoList">
+                    <GridView ItemsSource="{Binding NewsList}" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Padding="0">
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid MaximumRowsOrColumns="4" Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                        <GridView.ItemContainerStyle>
+                            <Style TargetType="GridViewItem">
+                                <Setter Property="MaxWidth" Value="140" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0,0,10,10" />
+                            </Style>
+                        </GridView.ItemContainerStyle>
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <RelativePanel>
+                                    <Grid x:Name="image"  RelativePanel.AlignTopWithPanel="True" Height="150" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Padding="1" >
+                                        <Image Stretch="UniformToFill" VerticalAlignment="Top" Source="{Binding ImageUrl}" HorizontalAlignment="Center" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"   />
+                                    </Grid>
+                                    <RelativePanel RelativePanel.Below="image"  >
+                                        <TextBlock Text="{Binding Title}" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" MaxLines="2" x:Name="title"  Style="{StaticResource SubtitleTextBlockStyle}" />
+                                        <TextBlock Text="{Binding Description}" Foreground="{StaticResource MyCaptionForegroundBrush}" FontWeight="SemiLight"  x:Name="description" RelativePanel.Below="title" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" MaxLines="3" FontSize="14" Margin="0,12,0,0" />
+                                    </RelativePanel>
+                                </RelativePanel>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                </RelativePanel>
+            </RelativePanel>
+        </ScrollViewer>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="screenStates">
+                <VisualState x:Name="Narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="content.Margin" Value="0" />
+                        <Setter Target="videoList.(RelativePanel.Below)" Value="mainPanel" />
+                        <Setter Target="videoList.(RelativePanel.AlignLeftWithPanel)" Value="True" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Normal">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="500" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="videoList.(RelativePanel.AlignLeftWithPanel)" Value="True" />
+                        <Setter Target="videoList.(RelativePanel.Below)" Value="mainPanel" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="940" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="videoList.(RelativePanel.RightOf)" Value="mainPanel" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</UserControl>
